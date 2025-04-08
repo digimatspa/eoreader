@@ -40,7 +40,7 @@ shapely>=2.0.0
 spyndex>=0.3.0
 
 # SERTIT libs
-sertit[full]>=1.44.1
+git+https://github.com/digimatspa/sertit-utils.git@main#egg=sertit
 
 # Dask
 dask>=2024.5.1
