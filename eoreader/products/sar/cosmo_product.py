@@ -394,7 +394,7 @@ class CosmoProduct(SarProduct):
                         sbi = netcdf_ds.groups["S01"].variables["SBI"]
                     except KeyError:
                         # CSG products
-                        sbi = netcdf_ds.groups["S01"].variables["IMG"]
+                        sbi = netcdf_ds.variables["IMG"]
 
                     for xml_attr, h5_attr in sbi_field_map.items():
                         global_attr.append(E(xml_attr, h5_to_str(sbi.attrs[h5_attr])))
@@ -415,27 +415,27 @@ class CosmoProduct(SarProduct):
                     "Missing the XML metadata file. Cannot read the product."
                 ) from exc
 
-    def get_quicklook_path(self) -> str:
+    def get_quicklook_path(self, custom_size) -> str:
         """
         Get quicklook path if existing.
 
         Returns:
             str: Quicklook path
+            :param custom_size:
         """
         qlk_path, qlk_exists = self._get_out_path(f"{self.condensed_name}_QLK.png")
         if not qlk_exists:
             with rasterio.open(str(self._img_path)) as ds:
-                quicklook_paths = [subds for subds in ds.subdatasets if "QLK" in subds]
+                quicklook_paths = [subds for subds in ds.subdatasets if "IMG" in subds]
 
             if len(quicklook_paths) == 0:
                 LOGGER.warning(f"No quicklook found in {self.condensed_name}")
             else:
                 utils.write(
-                    utils.read(quicklook_paths[0]),
+                    utils.read(quicklook_paths[0], size=custom_size),
                     qlk_path,
-                    dtype=np.uint8,
                     nodata=255,
-                    driver="PNG",
+                    driver="GTiff"
                 )
                 if len(quicklook_paths) > 1:
                     LOGGER.info(
