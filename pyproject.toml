@@ -41,7 +41,7 @@ dependencies = [
     "rioxarray>=0.10.0",
     "odc-geo>=0.4.6",
     "geopandas>=0.14.4",
-    "sertit[full]>=1.44.1",
+    "sertit @ git+https://github.com/digimatspa/sertit-utils.git@main",
     "spyndex>=0.3.0",
     "pyresample",
     "zarr",
